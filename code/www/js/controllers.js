@@ -4,8 +4,8 @@ angular.module('songhop.controllers', ['ionic', 'songhop.services'])
 /*
 Controller for the discover page
 */
-.controller('DiscoverCtrl', function($scope, $timeout, User) {
-  // our first three songs
+.controller('DiscoverCtrl', function($scope, $timeout, User, Recommendations) {
+/*  // our first three songs
 
   $scope.songs = [
      {
@@ -27,8 +27,13 @@ Controller for the discover page
         "image_large":"https://i.scdn.co/image/4e47ee3f6214fabbbed2092a21e62ee2a830058a"
      }
    ];
-  $scope.currentSong = angular.copy($scope.songs[0]);
+  $scope.currentSong = angular.copy($scope.songs[0]);*/
 
+  Recommendations.getNextSongs()
+    .then(function(){
+      $scope.currentSong = Recommendations.queue[0];
+      console.log($scope.currentSong);
+    })
   /*  fired when we click on favorite / skip song*/
   $scope.sendFeedback = function (bool){
 
