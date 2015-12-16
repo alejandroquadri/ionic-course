@@ -28,5 +28,11 @@ angular.module('songhop.services', [])
       o.queue = o.queue.concat(data);
     });
   }
+  o.nextSong = function (){
+    o.queue.shift(); //esto es para sacar la primer cancion del array
+    if(o.queue.lenght < 3) {
+      o.getNextSongs();
+    } 
+  }
   return o;
 })
