@@ -17,6 +17,7 @@ angular.module('songhop.services', [])
 })
 
 .factory('Recommendations', function($http,SERVER){
+  var media;
   var o = {
     queue:[]
   }
@@ -32,7 +33,7 @@ angular.module('songhop.services', [])
     o.queue.shift(); //esto es para sacar la primer cancion del array
     if(o.queue.lenght < 3) {
       o.getNextSongs();
-    } 
+    }
   }
   return o;
 })
