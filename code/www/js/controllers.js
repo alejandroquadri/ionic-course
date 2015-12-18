@@ -8,6 +8,7 @@ Controller for the discover page
   Recommendations.getNextSongs()
     .then(function(){
       $scope.currentSong = Recommendations.queue[0];
+      Recommendations.playCurrentSong();
     })
 
   // esto para pre-cargar la imagen del album proximo y que no tarde en cargar
@@ -30,6 +31,7 @@ Controller for the discover page
       //actualiza la currentSong
       $scope.currentSong = Recommendations.queue[0];
     },250);
+    Recommendations.playCurrentSong();
     if (bool) User.addSongToFavorites($scope.currentSong);
   };
 
