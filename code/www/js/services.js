@@ -1,16 +1,21 @@
 angular.module('songhop.services', [])
 .factory('User',function(){
   var o = {
-    favorites: []
+    favorites: [],
+    newFavorites: 0
   }
   o.addSongToFavorites = function (song){
     if (!song) return false; //para asegurarse que hayan pasado una cancion
     o.favorites.unshift(song); //suma las canciones nuevas al array. unshift a dif de push las suma al principio
+    o.newFavorites++;
   }
 
   o.removeSongFromFavorites = function (index, song){
     if (!song) return false;
     o.favorites.splice(index,1);
+  }
+  o.favoriteCount = function (){
+    return o.newFavorites;
   }
 
   return o;
@@ -32,7 +37,7 @@ angular.module('songhop.services', [])
   o.nextSong = function (){
     o.queue.shift(); //esto es para sacar la primer cancion del array
     o.haltAudio();
-    if(o.queue.lenght < 3) {
+    if(o.queue.length < 3) {
       o.getNextSongs();
     }
   }
@@ -51,6 +56,14 @@ angular.module('songhop.services', [])
 
   o.haltAudio = function(){
     if (media) media.pause();
+  }
+
+  o.init = function (){
+    if (o.queue.length === 0){
+      return o.getNextSongs();
+    } else {
+      return o.playCurrentSong();
+    }
   }
   return o;
 })
