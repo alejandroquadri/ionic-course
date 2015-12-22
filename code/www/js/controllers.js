@@ -87,4 +87,15 @@ Controller for our tab bar
   $scope.leavingFavorites = function (){
     Recommendations.init();
   }
+})
+
+.controller('SplashCtrl', function($scope, $state, User){
+  $scope.submitForm = function (username, signingUp){
+    User.auth(username, signingUp)
+      .then(function(){
+        $state.go('tab.discover');
+      }, function(){
+        alert('Trata con otro nombre');
+      });
+  }
 });
