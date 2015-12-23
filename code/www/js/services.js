@@ -53,6 +53,14 @@ angular.module('songhop.services', ['ionic.utils'])
       return defer.promise;
   }
 
+  o.destroySession = function(){
+    $localstorage.setObject('user',{});
+    o.username = false;
+    o.session_id = false;
+    o.favorites = [];
+    o.newFavorites = 0;
+  }
+
   o.addSongToFavorites = function (song){
     if (!song) return false; //para asegurarse que hayan pasado una cancion
     o.favorites.unshift(song); //suma las canciones nuevas al array. unshift a dif de push las suma al principio
