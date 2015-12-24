@@ -7,6 +7,43 @@ angular.module('songhop.services', ['ionic.utils'])
     newFavorites: 0
   }
 
+  //trae la lista de favoritos
+  o.populateFavorites = function (){
+    return $http ({
+      method:'GET',
+      url: SERVER.url + '/favorites',
+      params: {session_id: o.session_id}
+    }).success (function (data){
+      // merge data into the queue
+      o.favorites = data;
+    });
+  };
+
+  o.addSongToFavorites = function (song){
+    if (!song) return false; //para asegurarse que hayan pasado una cancion
+    o.favorites.unshift(song); //suma las canciones nuevas al array. unshift a dif de push las suma al principio
+    o.newFavorites++;
+
+    //esto es para que se grabe en el server
+    return $http.post(SERVER.url + '/favorites', {session_id: o.session_id, song_id: song.song_id});
+  };
+
+  o.removeSongFromFavorites = function (song, index){
+    if (!song) return false;
+    o.favorites.splice(index,1);
+
+    return $http ({
+      method: 'DELETE',
+      url: SERVER.url + '/favorites',
+      params: {session_id:o.session_id, song_id: song.song_id}
+
+    });
+  };
+
+  o.favoriteCount = function (){
+    return o.newFavorites;
+  };
+
   o.auth = function (username, signingUp){
     var authRoute;
 
@@ -19,15 +56,16 @@ angular.module('songhop.services', ['ionic.utils'])
       .success(function(data){
         o.setSession(data.username, data.session_id, data.favorites);
       });
-  }
+  };
 
+  //setea la data de la session
   o.setSession = function(username, session_id, favorites){
     if (username) o.username = username;
     if (session_id) o.session_id = session_id;
     if (favorites) o.favorites = favorites;
 
     $localstorage.setObject('user',{username:username, session_id:session_id});
-  }
+  };
 
   o.checkSession = function () {
       var defer = $q.defer();
@@ -61,38 +99,6 @@ angular.module('songhop.services', ['ionic.utils'])
     o.newFavorites = 0;
   }
 
-  o.addSongToFavorites = function (song){
-    if (!song) return false; //para asegurarse que hayan pasado una cancion
-    o.favorites.unshift(song); //suma las canciones nuevas al array. unshift a dif de push las suma al principio
-    o.newFavorites++;
-
-    //esto es para que se grabe en el server
-    return $http.post(SERVER.url + '/favorites', {session_id: o.session_id, song_id: song.song_id})
-  }
-
-  o.removeSongFromFavorites = function (index, song){
-    if (!song) return false;
-    o.favorites.splice(index,1);
-
-    return $http ({
-      method: 'DELETE',
-      url: SERVER.url + '/favorites',
-      params: {session_id:o.session_id, song_id: song.song_id}
-    });
-  }
-  o.favoriteCount = function (){
-    return o.newFavorites;
-  }
-
-  o.populateFavorites = function (){
-    return $http ({
-      method:'GET',
-      url: SERVER.url + 'favorites',
-      params: {session_id: o.session_id}
-    }).success (function (data){
-      o.favorites = data;
-    });
-  }
   return o;
 })
 
@@ -115,7 +121,7 @@ angular.module('songhop.services', ['ionic.utils'])
     if(o.queue.length < 3) {
       o.getNextSongs();
     }
-  }
+  };
   o.playCurrentSong = function (){
     var defer = $q.defer();
 
@@ -126,7 +132,7 @@ angular.module('songhop.services', ['ionic.utils'])
       defer.resolve();
     });
     media.play();
-    return defer.promise
+    return defer.promise;
   }
 
   o.haltAudio = function(){
@@ -139,6 +145,6 @@ angular.module('songhop.services', ['ionic.utils'])
     } else {
       return o.playCurrentSong();
     }
-  }
+  };
   return o;
-})
+});
