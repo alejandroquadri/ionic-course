@@ -35,6 +35,16 @@ angular.module('songhop', ['ionic', 'songhop.controllers'])
     url: '/tab',
     abstract: true,
     templateUrl: 'templates/tabs.html',
+    resolve: {
+      populateSession: function (User){
+        return User.checkSession();
+      }
+    },
+    onEnter: function ($state, User){
+      User.checkSession().then(function(hasSession){
+        if (!hasSession) $state.go('splash');
+      });
+    },
     controller: 'TabsCtrl'
   })
 
