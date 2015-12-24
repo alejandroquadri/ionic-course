@@ -1,5 +1,16 @@
 angular.module('songhop.controllers', ['ionic', 'songhop.services'])
 
+.controller('SplashCtrl', function($scope, $state, User){
+  $scope.submitForm = function (username, signingUp){
+    User.auth(username, signingUp)
+      .then(function(){
+        $state.go('tab.discover');
+      }, function(){
+        alert('Trata con otro nombre');
+      });
+  }
+})
+
 /*
 Controller for the discover page
 */
@@ -15,6 +26,7 @@ Controller for the discover page
   var hideLoading = function (){
     $ionicLoading.hide();
   }
+  // set loading to true first time while we retrieve songs from server.
   showLoading();
 
   // esto trae la lista de canciones recomendadas
@@ -92,17 +104,6 @@ Controller for our tab bar
     User.destroySession();
     // instead of using $state.go, we're going to redirect.
     // reason: we need to ensure views aren't cached.
-    $window.location.href = 'index.html' 
-  }
-})
-
-.controller('SplashCtrl', function($scope, $state, User){
-  $scope.submitForm = function (username, signingUp){
-    User.auth(username, signingUp)
-      .then(function(){
-        $state.go('tab.discover');
-      }, function(){
-        alert('Trata con otro nombre');
-      });
+    $window.location.href = 'index.html'
   }
 });
